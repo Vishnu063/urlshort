@@ -1,7 +1,7 @@
 data "aws_availability_zones" "available" { state = "available" }
 
-data "aws_ssm_parameter" "ubuntu_arm" {
-  name = "/aws/service/canonical/ubuntu/server/24.04/stable/current/arm64/hvm/ebs-gp3/ami-id"
+data "aws_ssm_parameter" "ubuntu" {
+  name = "/aws/service/canonical/ubuntu/server/24.04/stable/current/amd64/hvm/ebs-gp3/ami-id"
 }
 
 resource "aws_vpc" "main" {
@@ -82,7 +82,7 @@ resource "aws_key_pair" "main" {
 }
 
 resource "aws_instance" "k3s" {
-  ami                    = data.aws_ssm_parameter.ubuntu_arm.value
+  ami                    = data.aws_ssm_parameter.ubuntu.value
   instance_type          = var.instance_type
   subnet_id              = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.k3s.id]
@@ -98,4 +98,10 @@ resource "aws_instance" "k3s" {
     http_tokens = "required" # IMDSv2 only
   }
 
+}
+
+resource "aws_eip" "k3s" {
+  instance = aws_instance.k3s.id
+  domain   = "vpc"
+  tags     = { Name = "${var.project}-eip" }
 }
