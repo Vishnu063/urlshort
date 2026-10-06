@@ -16,17 +16,17 @@ flowchart TD
     F --> G["Phase 7: Monitoring<br/>Prometheus and Grafana"]
     G --> H["Phase 8: Hardening<br/>Backups, network policies, autoscaling"]
 
-    style A fill:#e8f1ff,stroke:#4a7bd0
-    style B fill:#e8f1ff,stroke:#4a7bd0
-    style C fill:#e8f1ff,stroke:#4a7bd0
-    style D fill:#e8f1ff,stroke:#4a7bd0
-    style E fill:#e8f1ff,stroke:#4a7bd0
-    style F fill:#e8f1ff,stroke:#4a7bd0
-    style G fill:#fff4d6,stroke:#d0a54a
-    style H fill:#f0f0f0,stroke:#999
+    style A fill:#1f6feb,stroke:#58a6ff,color:#ffffff
+    style B fill:#1f6feb,stroke:#58a6ff,color:#ffffff
+    style C fill:#1f6feb,stroke:#58a6ff,color:#ffffff
+    style D fill:#1f6feb,stroke:#58a6ff,color:#ffffff
+    style E fill:#1f6feb,stroke:#58a6ff,color:#ffffff
+    style F fill:#1f6feb,stroke:#58a6ff,color:#ffffff
+    style G fill:#9e6a03,stroke:#d29922,color:#ffffff
+    style H fill:#484f58,stroke:#8b949e,color:#ffffff
 ```
 
-Blue means done, yellow means next, grey means planned. Phase 6 (real domain and HTTPS) was skipped on purpose, and the app is served over HTTP using a free `nip.io` hostname.
+Blue means done, amber means next, grey means planned. Phase 6 (real domain and HTTPS) was skipped on purpose, and the app is served over HTTP using a free `nip.io` hostname.
 
 ---
 
@@ -49,9 +49,9 @@ flowchart TD
     AR --> RO["ArgoCD rolls out the new image<br/>to the k3s cluster"]
     RO --> L["New version is live"]
 
-    style F1 fill:#ffe0e0,stroke:#d04a4a
-    style F2 fill:#ffe0e0,stroke:#d04a4a
-    style L fill:#dff5e1,stroke:#4aa860
+    style F1 fill:#da3633,stroke:#ff7b72,color:#ffffff
+    style F2 fill:#da3633,stroke:#ff7b72,color:#ffffff
+    style L fill:#238636,stroke:#3fb950,color:#ffffff
 ```
 
 CI only reacts to changes under `app/`. The bot commit that updates the image tag touches only `manifests/`, so it cannot start another pipeline run (no loop).
