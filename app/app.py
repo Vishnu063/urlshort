@@ -34,7 +34,7 @@ def create_app(db_path=None):
     @app.get("/healthz")
     def healthz():
         get_db().execute("SELECT 1")
-        return jsonify(status="ok")
+        return jsonify(status="ok", version="v2")
 
     @app.post("/api/shorten")
     def shorten():
