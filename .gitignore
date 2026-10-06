@@ -6,3 +6,5 @@ venv/
 *.tfstate*
 terraform.tfvars
 ansible/inventory.ini
+infra/ansible/inventory.ini
+infra/terraform/terraform.tfvars
