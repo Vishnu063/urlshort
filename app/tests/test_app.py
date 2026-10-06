@@ -32,3 +32,9 @@ def test_invalid_url(client):
 
 def test_unknown_code(client):
     assert client.get("/nope123").status_code == 404
+
+
+def test_index_page(client):
+    r = client.get("/")
+    assert r.status_code == 200
+    assert b"urlshort" in r.data

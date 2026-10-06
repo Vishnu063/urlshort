@@ -9,7 +9,7 @@ FROM python:3.12-slim
 RUN useradd -r -u 10001 appuser && mkdir /data && chown appuser /data
 WORKDIR /app
 COPY --from=build /install /usr/local
-COPY app.py .
+COPY app.py index.html ./
 ENV DB_PATH=/data/urls.db PYTHONUNBUFFERED=1
 USER appuser
 EXPOSE 8000

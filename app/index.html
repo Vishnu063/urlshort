@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>urlshort</title>
+<style>
+  :root { --bg:#0f172a; --card:#1e293b; --fg:#e2e8f0; --muted:#94a3b8; --accent:#38bdf8; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center;
+         background:var(--bg); color:var(--fg); font-family:system-ui,sans-serif; padding:1rem; }
+  .card { background:var(--card); padding:2rem; border-radius:16px; width:100%; max-width:520px;
+          box-shadow:0 10px 30px rgba(0,0,0,.4); }
+  h1 { margin:0 0 .25rem; } p.sub { margin:0 0 1.5rem; color:var(--muted); }
+  input { width:100%; padding:.8rem 1rem; border-radius:10px; border:1px solid #334155;
+          background:#0f172a; color:var(--fg); font-size:1rem; }
+  button { margin-top:.8rem; width:100%; padding:.8rem; border:0; border-radius:10px; cursor:pointer;
+           background:var(--accent); color:#0f172a; font-weight:700; font-size:1rem; }
+  .out { margin-top:1.2rem; padding:1rem; border-radius:10px; background:#0f172a; display:none; word-break:break-all; }
+  .out a { color:var(--accent); } .err { color:#f87171; }
+  small { display:block; margin-top:1.5rem; color:var(--muted); text-align:center; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>urlshort</h1>
+  <p class="sub">Paste a long link and get a short one.</p>
+  <input id="url" type="url" placeholder="https://example.com/very/long/link" autofocus>
+  <button id="go">Shorten</button>
+  <div class="out" id="out"></div>
+  <small>Built with Terraform, k3s, GitHub Actions and ArgoCD</small>
+</div>
+<script>
+const out = document.getElementById("out");
+async function shorten() {
+  const url = document.getElementById("url").value.trim();
+  out.style.display = "block";
+  out.textContent = "Working...";
+  try {
+    const r = await fetch("/api/shorten", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({url})
+    });
+    const d = await r.json();
+    if (!r.ok) { out.innerHTML = '<span class="err"></span>'; out.firstChild.textContent = d.error; return; }
+    const stats = location.origin + "/api/stats/" + d.code;
+    out.innerHTML = 'Short link: <a target="_blank"></a><br><small>Hits: <a target="_blank">view stats</a></small>';
+    const links = out.querySelectorAll("a");
+    links[0].href = d.short_url; links[0].textContent = d.short_url;
+    links[1].href = stats;
+  } catch (e) { out.innerHTML = '<span class="err">Request failed</span>'; }
+}
+document.getElementById("go").onclick = shorten;
+document.getElementById("url").addEventListener("keydown", e => { if (e.key === "Enter") shorten(); });
+</script>
+</body>
+</html>

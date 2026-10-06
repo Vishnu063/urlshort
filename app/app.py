@@ -3,7 +3,7 @@ import secrets
 import sqlite3
 import string
 
-from flask import Flask, g, jsonify, redirect, request
+from flask import Flask, g, jsonify, redirect, request, send_from_directory
 
 ALPHABET = string.ascii_letters + string.digits
 
@@ -56,6 +56,10 @@ def create_app(db_path=None):
         if row is None:
             return jsonify(error="not found"), 404
         return jsonify(code=code, url=row["url"], hits=row["hits"])
+
+    @app.get("/")
+    def index():
+        return send_from_directory(os.path.dirname(os.path.abspath(__file__)), "index.html")
 
     @app.get("/<code>")
     def go(code):
