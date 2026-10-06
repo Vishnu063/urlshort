@@ -1,0 +1,79 @@
+- hosts: k3s
+  become: true
+  tasks:
+    - name: Install base packages
+      apt:
+        name: [ufw, fail2ban, unattended-upgrades, curl]
+        update_cache: true
+        state: present
+
+    - name: Harden SSH (keys only, no root)
+      lineinfile:
+        path: /etc/ssh/sshd_config.d/99-hardening.conf
+        create: true
+        mode: "0644"
+        line: "{{ item }}"
+      loop:
+        - "PasswordAuthentication no"
+        - "PermitRootLogin no"
+      notify: Restart ssh
+
+    - name: Allow required ports
+      community.general.ufw:
+        rule: allow
+        port: "{{ item }}"
+        proto: tcp
+      loop: ["22", "80", "443", "6443"]
+
+    - name: Allow k3s pod and service networks
+      community.general.ufw:
+        rule: allow
+        from_ip: "{{ item }}"
+      loop: ["10.42.0.0/16", "10.43.0.0/16"]
+
+    - name: Enable firewall
+      community.general.ufw:
+        state: enabled
+        policy: deny
+
+    - name: Enable fail2ban
+      service:
+        name: fail2ban
+        state: started
+        enabled: true
+
+    - name: Install k3s (stable channel)
+      shell: >
+        curl -sfL https://get.k3s.io |
+        INSTALL_K3S_CHANNEL=stable sh -s - --tls-san {{ ansible_host }} --write-kubeconfig-mode 600
+      args:
+        creates: /usr/local/bin/k3s
+
+    - name: Wait for node to be ready
+      command: k3s kubectl get nodes
+      register: nodes
+      until: "' Ready' in nodes.stdout"
+      retries: 20
+      delay: 10
+      changed_when: false
+
+    - name: Fetch kubeconfig
+      fetch:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: /tmp/urlshort-kubeconfig
+        flat: true
+
+  handlers:
+    - name: Restart ssh
+      service:
+        name: ssh
+        state: restarted
+
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: Point kubeconfig to server IP
+      shell: |
+        mkdir -p ~/.kube
+        sed "s/127.0.0.1/{{ hostvars['urlshort'].ansible_host }}/" /tmp/urlshort-kubeconfig > ~/.kube/urlshort.yaml
+        chmod 600 ~/.kube/urlshort.yaml
