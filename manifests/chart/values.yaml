@@ -1,6 +1,6 @@
 image:
   repository: ghcr.io/vishnu063/urlshort
-  tag: "36f424667899fe7d4022c8d2253131e668c92aaf"
+  tag: "c4c78f3242d8e804773dd5ea8323a1c17d4131d1"
 ingress:
   host: urlshort.43.205.216.159.nip.io
 storage:
