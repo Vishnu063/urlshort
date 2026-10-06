@@ -1,0 +1,7 @@
+image:
+  repository: ghcr.io/vishnu063/urlshort
+  tag: "caf98da85bac0da69ea80f8e2889c09879e0244a"
+ingress:
+  host: urlshort..nip.io
+storage:
+  size: 1Gi
