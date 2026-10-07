@@ -1,0 +1,35 @@
+resources:
+  requests: { cpu: 50m, memory: 100Mi }
+  limits: { memory: 250Mi }
+admin:
+  existingSecret: grafana-admin
+  userKey: admin-user
+  passwordKey: admin-password
+persistence: { enabled: false }
+datasources:
+  datasources.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Prometheus
+        type: prometheus
+        url: http://prometheus-server.monitoring.svc
+        isDefault: true
+dashboardProviders:
+  dashboardproviders.yaml:
+    apiVersion: 1
+    providers:
+      - name: default
+        folder: ""
+        type: file
+        options: { path: /var/lib/grafana/dashboards/default }
+dashboards:
+  default:
+    node-exporter:
+      gnetId: 1860
+      revision: 37
+      datasource: Prometheus
+ingress:
+  enabled: true
+  ingressClassName: traefik
+  hosts:
+    - grafana.13.126.218.96.nip.io

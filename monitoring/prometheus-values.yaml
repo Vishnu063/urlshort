@@ -1,0 +1,14 @@
+alertmanager: { enabled: false }
+prometheus-pushgateway: { enabled: false }
+server:
+  retention: 2d
+  persistentVolume: { enabled: true, size: 2Gi }
+  resources:
+    requests: { cpu: 50m, memory: 200Mi }
+    limits: { memory: 400Mi }
+prometheus-node-exporter:
+  resources:
+    limits: { memory: 40Mi }
+kube-state-metrics:
+  resources:
+    limits: { memory: 64Mi }

@@ -8,3 +8,6 @@ terraform.tfvars
 ansible/inventory.ini
 infra/ansible/inventory.ini
 infra/terraform/terraform.tfvars
+
+# Stakpak session files
+.stakpak/session*
