@@ -99,9 +99,3 @@ resource "aws_instance" "k3s" {
   }
 
 }
-
-resource "aws_eip" "k3s" {
-  instance = aws_instance.k3s.id
-  domain   = "vpc"
-  tags     = { Name = "${var.project}-eip" }
-}

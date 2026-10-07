@@ -1,6 +1,6 @@
 variable "region" { default = "ap-south-1" }
 variable "project" { default = "urlshort" }
-variable "instance_type" { default = "c7i-flex.large" }
+variable "instance_type" { default = "m7i-flex.large" }
 variable "admin_cidr" {
   description = "Your IP in CIDR form, allowed for SSH and the Kubernetes API"
   type        = string
