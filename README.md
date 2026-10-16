@@ -1,3 +1,5 @@
+> **Review this project:** [Source map, walkthrough, and evidence limits](INTERVIEW.md).
+
 # urlshort: an end-to-end DevOps project
 
 A URL shortener deployed with a fully automated pipeline: **`git push` goes to a live app**, on one low-cost AWS server. The app is small on purpose, because the point of the project is the platform around it.
